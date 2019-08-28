@@ -1,0 +1,153 @@
+edureka@test01:~$ su -
+Password: 
+
+1. 1. pulling centos6 for docker hub
+root@test01:~# docker pull centos:centos6
+centos6: Pulling from library/centos
+e09ea867b784: Pull complete 
+Digest: sha256:075ebeae382de84b02572f7723a1f664a7c5f5fe05433a2bce575dd8c56c0268
+Status: Downloaded newer image for centos:centos6
+
+2. ckeck the image
+root@test01:~# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+centos7/nonroot     v1                  6f2e9a47fcb2        27 hours ago        195.4 MB
+centos              centos6             26cb1244b171        3 weeks ago         194.5 MB
+centos              latest              2d194b392dd1        3 weeks ago         195.4 MB
+
+3. create a container with attach mode
+root@test01:~# docker run -i -t centos:centos6 /bin/bash
+
+4. Installing
+[root@ea8e63de5444 /]# yum install wget
+[root@ea8e63de5444 /]# wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+[root@ea8e63de5444 /]# rpm -Uvh epel-release-6-8.noarch.rpm
+[root@ea8e63de5444 /]# yum update
+Loaded plugins: fastestmirror, ovl
+Setting up Update Process
+Determining fastest mirrors
+Error: Cannot retrieve metalink for repository: epel. Please verify its path and try again
+
+5. sloving the error
+[root@ea8e63de5444 /]# yum -y upgrade ca-certificates
+[root@ea8e63de5444 /]# yum -y upgrade ca-certificates --disablerepo=epel 
+
+6. update
+[root@ea8e63de5444 /]# yum update
+
+7. other installs
+[root@ea8e63de5444 /]# yum install which sudo httpd php openssh-server
+
+8. ckeck the instalations
+[root@ea8e63de5444 /]# cd
+[root@ea8e63de5444 ~]# whoami
+root
+[root@ea8e63de5444 ~]# which service
+/sbin/service
+
+9. edit .bashrc file 
+[root@ea8e63de5444 ~]#vi .bashrc
+
+
+10. adding below two lines
+# add the service that the container has
+/sbin/service httpd start
+/sbin/service openssh-server start
+
+esc then :wq to come out
+
+
+11. exit the container
+******
+[root@ea8e63de5444 ~]# exit
+exit
+
+12.commit  crate a image
+root@test01:~# docker commit ea8e63de5444 centos6:baseweb
+sha256:11e9cc4ed5cabbf8929702e73379618cc1a1db24decbdef95cfcb925b42b443c
+
+13. check the image 
+root@test01:~# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+centos6             baseweb             11e9cc4ed5ca        2 minutes ago       367.7 MB
+centos7/nonroot     v1                  6f2e9a47fcb2        27 hours ago        195.4 MB
+centos              centos6             26cb1244b171        3 weeks ago         194.5 MB
+centos              latest              2d194b392dd1        3 weeks ago         195.4 MB
+
+14. based on that image crate a container or image instance
+root@test01:~# docker run -i -t centos6:baseweb /bin/bash
+Starting httpd: httpd: Could not reliably determine the server's fully qualified domain name, using 172.17.0.4 for ServerName
+                                                           [  OK  ]
+openssh-server: unrecognized service
+
+15. start the sshd 
+[root@04750e39d308 /]# service sshd start
+Generating SSH2 RSA host key:                              [  OK  ]
+Generating SSH1 RSA host key:                              [  OK  ]
+Generating SSH2 DSA host key:                              [  OK  ]
+Starting sshd:                                             [  OK  ]
+
+16. exit
+[root@ea8e63de5444 ~]# exit
+exit
+
+17. check the image 
+root@test01:~# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+centos6             baseweb             11e9cc4ed5ca        2 minutes ago       367.7 MB
+centos7/nonroot     v1                  6f2e9a47fcb2        27 hours ago        195.4 MB
+centos              centos6             26cb1244b171        3 weeks ago         194.5 MB
+centos              latest              2d194b392dd1        3 weeks ago         195.4 MB
+
+18. removing the image 
+root@test01:~# docker rmi centos:baseweb
+fails because container is the so remove container first
+
+19. removing container
+
+root@test01:~# docker rm cintainer_id
+ then remove 
+root@test01:~# docker rmi centos:baseweb
+
+20. docker commit even though we removed base image.
+root@test01:~# docker commit ea8e63de5444 centos6:baseweb^c
+
+21. start the container
+root@test01:~# docker  start ea8e63de5444
+
+22. attach
+root@test01:~# docker attach ea8e63de5444
+
+23 edit 
+[root@04750e39d308 /]# cd
+[root@04750e39d308 ~]# vi .bashrc
+
+
+24. add or make changes bellow
+
+# add the service that the container has
+/sbin/service httpd start
+/sbin/service sshd start
+
+25. exit the container
+root@test01:~# exit
+
+26. commit
+root@test01:~# docker commit ea8e63de5444 centos6:baseweb
+
+27. check images
+root@test01:~# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+centos6             baseweb             11e9cc4ed5ca        2 minutes ago       367.7 MB
+centos7/nonroot     v1                  6f2e9a47fcb2        27 hours ago        195.4 MB
+centos              centos6             26cb1244b171        3 weeks ago         194.5 MB
+centos              latest              2d194b392dd1        3 weeks ago         195.4 MB
+
+28. run the image or cratea container.
+root@test01:~# docker run -i -t centos6:baseweb /bin/bash
+
+29. check the file space with human readable
+root@test01:~# df -h
+
+
+

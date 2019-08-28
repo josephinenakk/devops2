@@ -1,0 +1,199 @@
+1. root@test01:~# ll
+ download bluefreedom from http://www.oswd.org/designs/browse/
+  and extact to downloads folder and zip the file
+
+2. root@test01:~# cp /home/edureka/Downloads/bluefreedom2.zip .
+root@test01:~# ll
+total 64
+drwx------  8 root root  4096 Apr  2 23:11 ./
+drwxr-xr-x 23 root root  4096 Dec 15  2016 ../
+-rw-------  1 root root  1133 Jan 12  2017 .bash_history
+-rw-r--r--  1 root root  3106 Feb 20  2014 .bashrc
+-rw-r--r--  1 root root 14152 Apr  2 23:11 bluefreedom2.zip
+
+
+
+3. root@test01:~# mkdir docker
+root@test01:~# cd docker/
+
+4. root@test01:~/docker# mkdir dockerwww
+root@test01:~/docker#cd dockerwww/
+
+5. root@test01:~/docker/dockerwww#unzip ../../bluefreedom2.zip
+root@test01:~/docker/dockerwww#ll
+
+6. root@test01:~/docker/dockerwww# mv bluefreedom2/* .
+root@test01:~/docker/dockerwww# ll
+total 24
+drwxr-xr-x 4 root root 4096 Apr  2 23:25 ./
+drwxr-xr-x 3 root root 4096 Apr  2 23:24 ../
+drwxrwxr-x 2 root root 4096 Apr  2 23:25 bluefreedom2/
+drwxrwxr-x 2 root root 4096 Jan 18  2007 images/
+-rw-rw-r-- 1 root root 2078 Jan 18  2007 index.html
+-rw-rw-r-- 1 root root 1631 Jan  8  2007 style.css
+
+7. root@test01:~/docker/dockerwww# rm -rf bluefreedom2/
+root@test01:~/docker/dockerwww# ll
+total 20
+drwxr-xr-x 3 root root 4096 Apr  2 23:27 ./
+drwxr-xr-x 3 root root 4096 Apr  2 23:24 ../
+drwxrwxr-x 2 root root 4096 Jan 18  2007 images/
+-rw-rw-r-- 1 root root 2078 Jan 18  2007 index.html
+-rw-rw-r-- 1 root root 1631 Jan  8  2007 style.css
+
+
+
+4. ckeck images
+root@test01:~/docker/dockerwww# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+centos6             baseweb             7c9c2475c55a        4 hours ago         367.7 MB
+centos              centos6             26cb1244b171        3 weeks ago         194.5 MB
+centos              latest              2d194b392dd1        3 weeks ago         195.4 MB
+
+
+******************************************************* to understand
+
+root@test01:~/docker/dockerwww# docker run --name=webtest -i -t centos6:baseweb /bin/bash
+Starting httpd: httpd: Could not reliably determine the server's fully qualified domain name, using 172.17.0.3 for ServerName
+                                                           [  OK  ]
+Starting sshd:                                             [  OK  ]
+
+[root@e7a9c907ff6d /]# exit
+exit
+root@test01:~/docker/dockerwww# docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                        PORTS               NAMES
+e7a9c907ff6d        centos6:baseweb     "/bin/bash"         3 minutes ago       Exited (127) 16 seconds ago                       webtest
+7b4fe436aaae        centos6:baseweb     "/bin/bash"         4 hours ago         Up 4 hours                                        pensive_mcclintock
+909ecc6c6627        centos:centos6      "/bin/bash"         4 hours ago         Exited (0) 4 hours ago                            amazing_murdock
+f2d880c86faa        centos:centos6      "/bin/bash"         4 hours ago         Exited (0) 4 hours ago                            happy_northcutt
+e78c1eacc0a0        centos:centos6      "/bin/bash"         4 hours ago         Exited (0) 4 hours ago                            serene_pike
+root@test01:~/docker/dockerwww# docker rm webtest
+webtest
+root@test01:~/docker/dockerwww# docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                   PORTS               NAMES
+7b4fe436aaae        centos6:baseweb     "/bin/bash"         4 hours ago         Up 4 hours                                   pensive_mcclintock
+909ecc6c6627        centos:centos6      "/bin/bash"         4 hours ago         Exited (0) 4 hours ago                       amazing_murdock
+f2d880c86faa        centos:centos6      "/bin/bash"         4 hours ago         Exited (0) 4 hours ago                       happy_northcutt
+e78c1eacc0a0        centos:centos6      "/bin/bash"         4 hours ago         Exited (0) 4 hours ago                       serene_pike
+root@test01:~/docker/dockerwww# 
+********************************************************888888888888888
+
+5. root@test01:~/docker/dockerwww# docker run --name=webtest -v /root/docker/dockerwww:/var/www/html -i -t centos6:baseweb1 /bin/bash
+Starting httpd: httpd: Could not reliably determine the server's
+ fully qualified domain name, using 172.17.0.3 for ServerName
+
+ then goto browser and paste http://172.17.0.3
+ 
+ 
+6. [root@7f024e8fa859 /]# exit
+exit
+
+7. adding git repository  to this folder
+      1. root@test01:~/docker/dockerwww# git init .
+Initialized empty Git repository in /root/docker/dockerwww/.git/
+      2.  root@test01:~/docker/dockerwww# git status
+On branch master
+
+Initial commit
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	images/
+	index.html
+	style.css
+
+8. root@test01:~/docker/dockerwww# git add *
+  1. root@test01:~/docker/dockerwww# git status
+On branch master
+
+Initial commit
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+
+	new file:   images/botbg.jpg
+	new file:   images/hidr.jpg
+	new file:   images/midbg.jpg
+	new file:   images/minimal.jpg
+	new file:   images/topbg.jpg
+	new file:   index.html
+	new file:   style.css
+
+9. root@test01:~/docker/dockerwww# git commit -m "this is docker bluefreedon 1"
+
+ 7 files changed, 171 insertions(+)
+ create mode 100644 images/botbg.jpg
+ create mode 100644 images/hidr.jpg
+ create mode 100644 images/midbg.jpg
+ create mode 100644 images/minimal.jpg
+ create mode 100644 images/topbg.jpg
+ create mode 100644 index.html
+ create mode 100644 style.css
+    1.root@test01:~/docker/dockerwww# git status
+On branch master
+nothing to commit, working directory clean
+
+10. ckeckroot@test01:~/docker/dockerwww# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+centos6             baseweb1            506fbdc797c0        About an hour ago   367.7 MB
+centos              centos6             26cb1244b171        3 weeks ago         194.5 MB
+ubuntu              latest              4ca3a192ff2a        16 months ago       128.2 MB
+root@test01:~/docker/dockerwww# docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                         PORTS               NAMES
+b477fa2d672d        centos6:baseweb1    "/bin/bash"         15 minutes ago      Exited (0) 8 minutes ago                           webtest
+b089d93b66fa        centos6:baseweb1    "/bin/bash"         About an hour ago   Up About an hour                                   prickly_raman
+a47434823856        centos:centos6      "/bin/bash"         About an hour ago   Exited (0) About an hour ago                       small_galileo
+307c184f0ac4        centos:centos6      "/bin/bash"         About an hour ago   Exited (0) About an hour ago                       agitated_davinci
+
+11. start webtest 
+root@test01:~/docker/dockerwww# docker start webtest
+webtest
+root@test01:~/docker/dockerwww# docker attach webtest
+
+12. check http service are running
+[root@b477fa2d672d /]# ps aux |grep http
+root        28  0.0  0.7 232964 14720 ?        Ss   18:26   0:00 /usr/sbin/httpd
+apache      31  0.0  0.2 232964  6144 ?        S    18:26   0:00 /usr/sbin/httpd
+
+13. ifconfig of container
+	1. [root@b477fa2d672d /]# ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:AC:11:00:03  
+          inet addr:172.17.0.3  Bcast:0.0.0.0  Mask:255.255.0.0
+          
+    2. root@test01: df -h
+	what running in undrerline file sys
+	40G  5.8G   32G  16% /var/www/html
+	
+14. installing git in webtest container
+  [root@b477fa2d672d /]#yum install git	
+
+
+15. to do git operation in this container we install git
+so going to  html folder and see priviously we add git repository 
+know we do same after inatalling git here( means in this container)
+		1. [root@b477fa2d672d /]# cd /var/www/html
+[root@b477fa2d672d html]# ll
+total 12
+drwxrwxr-x 2 root root 4096 Jan 18  2007 images
+-rw-rw-r-- 1 root root 2078 Jan 18  2007 index.html
+-rw-rw-r-- 1 root root 1631 Jan  8  2007 style.css
+		2. [root@b477fa2d672d html]# git status
+# On branch master
+nothing to commit (working directory clean)
+		3. [root@b477fa2d672d html]# ls -al
+total 24
+drwxr-xr-x 4 root root 4096 Apr  2 18:17 .
+drwxr-xr-x 6 root root 4096 Apr  2 17:10 ..
+drwxr-xr-x 8 root root 4096 Apr  2 18:21 .git
+drwxrwxr-x 2 root root 4096 Jan 18  2007 images
+-rw-rw-r-- 1 root root 2078 Jan 18  2007 index.html
+-rw-rw-r-- 1 root root 1631 Jan  8  2007 style.css
+
+16. [root@b477fa2d672d html]# exit
+exit
+
+
+
+
+
